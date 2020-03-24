@@ -3,9 +3,14 @@ clear; close all; clc
 
 %% Get video
 
-vidpath = '/home/ljp/Science/Loann/Results Loann/Fish Data light on and off/Fish1/Light On/Films/Fish On_1_12.avi';
-vidpath = '/home/ljp/Science/Loann/Results Loann/Fish Data light on and off/Fish13/Light Off/Films/Fish Off_13_6.avi';
-vidpath = '/home/ljp/Science/Loann/Results Loann/Fish Data light on and off/Fish18/Light On/Films/Fish On_18_0.avi';
+vidnum = 3;
+if vidnum == 1
+    vidpath = '/home/ljp/Science/Loann/Results Loann/Fish Data light on and off/Fish1/Light On/Films/Fish On_1_12.avi';
+elseif vidnum == 2
+    vidpath = '/home/ljp/Science/Loann/Results Loann/Fish Data light on and off/Fish13/Light Off/Films/Fish Off_13_6.avi';
+elseif vidnum == 3
+    vidpath = '/home/ljp/Science/Loann/Results Loann/Fish Data light on and off/Fish18/Light On/Films/Fish On_18_0.avi';
+end
 vid = VideoReader(vidpath);
 numframes = floor(vid.Duration * vid.FrameRate);
 width = vid.Width;
@@ -145,6 +150,7 @@ background = uint8(background./(numframes/dframe));
 [centers, radii] = imfindcircles(background, [round((height)/2.3), round((height)/2)], 'ObjectPolarity', 'dark', 'Sensitivity', 0.99);
 radius = max(radii);
 center = centers(radius == radii, :);
+[x, y] = meshgrid(-(center(1)-1):(width-center(1)), -(center(2)-1):(height-center(2))); % meshgrid for mask
 
 % Computing averaged pixel value for different radii
 mult_coeffs = 0.80:0.001:1.2;
@@ -161,7 +167,6 @@ radius_coeff = mult_coeffs(mindiff);
 % Create masks
 radius_coeff_inc = 0.01;
 radii = ((radius_coeff-10*radius_coeff_inc):radius_coeff_inc:(radius_coeff+5*radius_coeff_inc)) .* radius;
-[x, y] = meshgrid(-(center(1)-1):(width-center(1)), -(center(2)-1):(height-center(2)));
 cmasks = zeros(height, width, length(radii));
 for r = 1:length(radii)
     cmaskr = ((x.^2 + y.^2) <= radii(r)^2);
