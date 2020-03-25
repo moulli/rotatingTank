@@ -13,7 +13,7 @@ elseif vidnum == 3
     vidpath = '/home/ljp/Science/Loann/Results Loann/Fish Data light on and off/Fish18/Light On/Films/Fish On_18_0.avi';
 end
 vid = VideoReader(vidpath);
-numframes = 500; %floor(vid.Duration * vid.FrameRate);
+numframes = 1000; %floor(vid.Duration * vid.FrameRate);
 width = vid.Width;
 height = vid.Height;
 
@@ -82,7 +82,7 @@ maskused = zeros(numframes, 1);
 for frame = 1:numframes
     im = readFrame(vid);
     if frame == 1
-        first_mask = 8; % arbitrary number for first mask
+        first_mask = 10; % arbitrary number for first mask
         maskused(frame) = first_mask;
         new_im = (background - im) .* cmasks(:, :, first_mask);
         [dpframex, dpframey] = find(new_im == max(new_im(:)));
@@ -112,8 +112,9 @@ for frame = 1:numframes
                 dpframex = dpmaskx(pix);
                 dpframey = dpmasky(pix);
                 dp(frame, :) = [dpframex, dpframey];
-                new_im = (background - im) .* cmasks(:, :, pix);
-                maskused(frame) = pix;
+                ok_pix = min([pix+3, max(pixind)]);
+                new_im = (background - im) .* cmasks(:, :, ok_pix);
+                maskused(frame) = ok_pix;
                 break
             end
             if pixi == length(pixind)
@@ -127,7 +128,7 @@ for frame = 1:numframes
         end
     end
     % Then make a mask for neighbourhood
-    rnei = 40;
+    rnei = 45;
     [xnei, ynei] = meshgrid(-(dpframey-1):(width-dpframey), -(dpframex-1):(height-dpframex)); 
     masknei = uint8((xnei.^2 + ynei.^2) <= rnei^2);
     % Identifying important points
@@ -136,7 +137,7 @@ for frame = 1:numframes
     tail_length = 30;
     body_length = 0;
     inertia = 0.5;
-    num_pix1 = 20;
+    num_pix1 = 10;
     num_pix2 = 150;
     initial_box = 0.6;
     new_im = (255 - new_im);
@@ -188,7 +189,7 @@ for frame = inst:numframes
     image(new_im, 'CDataMapping', 'scaled')
     plot(ptss(2:2:end, frame), ptss(1:2:end, frame), 'r')
     axis equal
-    pause(0.025)
+    pause(0.01)
     hold off
 end
 
@@ -202,7 +203,48 @@ hold on
 plot(ptss(2, :))
 plot(ptss(end, :))
 
+figure
+hold on
+plot(diff(ptss(end-1, :)-ptss(1, :)))
+plot(diff(ptss(end, :)-ptss(2, :)))
 
+figure
+ptss1 = sqrt(ptss(1, :).^2 + ptss(2, :).^2);
+ptss2 = sqrt(ptss(end-1, :).^2 + ptss(end, :).^2);
+plot(diff(ptss2 - ptss1))
+
+
+%% How to better get fish image
+
+% imbinarize
+btemp = imbinarize(new_im);
+figure
+imshow(btemp)
+
+% Fit exponential
+temp = double(new_im);
+temp(temp == 255) = [];
+x = min(temp):254;
+y = zeros(size(x));
+for i = 1:length(x)
+    y(i) = sum(temp == x(i));
+end
+efit = fit(x', y', 'exp1');
+figure
+plot(efit, x, y)
+yg = efit.a * exp(efit.b .* x);
+for i = length(yg):-1:1
+    if yg(i) < 10
+        thresh = i;
+        break
+    end
+end
+figure
+new_im = double(new_im);
+bin_im = (new_im .* (new_im <= x(thresh)));
+bin_im(bin_im == 0) = 255;
+image(bin_im, 'CDataMapping', 'scaled')
+axis equal
 
 
 
