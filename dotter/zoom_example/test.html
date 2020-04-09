@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<style type="text/css">
+		img {
+			margin: 0;
+			padding: 0;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div>
+		<form name="pteyea" method="post" id="ptf0">
+			x-coordinate: <input type="text" name="form_x" />
+			y-coordinate: <input type="text" name="form_y" />
+		</form>	
+		<form name="pteyeb" method="post" id="ptf1">
+			x-coordinate: <input type="text" name="form_x" />
+			y-coordinate: <input type="text" name="form_y" />
+		</form>	
+		<form name="ptbody" method="post" id="ptf2">
+			x-coordinate: <input type="text" name="form_x" />
+			y-coordinate: <input type="text" name="form_y" />
+		</form>	
+		<form name="ptmidtail" method="post" id="ptf3">
+			x-coordinate: <input type="text" name="form_x" />
+			y-coordinate: <input type="text" name="form_y" />
+		</form>	
+		<form name="ptendtail" method="post" id="ptf4">
+			x-coordinate: <input type="text" name="form_x" />
+			y-coordinate: <input type="text" name="form_y" />
+		</form>		
+	</div>
+
+	<div>
+		<img id="myimage" src="../static/dataset/01OF000001.png" width="100%"alt="Picture of fish in tank" onclick="getCursorPos(event)">
+	</div>
+
+	<script type="text/javascript">
+
+		/* Initialize point count: */
+		var point = 0
+		/* Make list of forms: */
+		var ptf = ["ptf0", "ptf1", "ptf2", "ptf3", "ptf4"]
+
+		/* Get cursor coordinates relative to image: */
+		function getCursorPos(e) {
+			var a, x = 0, y = 0;
+			e = e || window.event;
+			/* Get the x and y positions of the image: */
+			a = document.getElementById("myimage").getBoundingClientRect();
+			/* Calculate the cursor's x and y coordinates, relative to the image: */
+			x = e.pageX - a.left;
+			y = e.pageY - a.top;
+			/* Consider any page scrolling: */
+			x = x - window.pageXOffset;
+			y = y - window.pageYOffset;
+			/* Divide by image width and height: */
+			x = x / (a.right - a.left)
+			y = y / (a.bottom - a.top)
+			/* Add point to form: */
+			ptfn = document.getElementById(ptf[point])
+			ptfn.form_x.value = x;
+			ptfn.form_y.value = y;
+			/* Go to next form: */
+			point = point + 1
+		}
+
+	</script>
+</body>

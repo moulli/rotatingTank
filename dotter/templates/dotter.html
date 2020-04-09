@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+
+	<title>Dotter - simulation</title>
+	<link rel="icon" type="image/png" href="{{url_for('static', filename='otter-solid.png')}}" />
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+	<style type="text/css">
+		.container {
+			position: relative;
+			text-align: center;
+			color: white;
+		}
+		/* Top left text */
+		.top-left {
+			position: absolute;
+			top: 8px;
+			left: 32px;
+		}
+		/* Top right text */
+		.top-right {
+			position: absolute;
+			top: 8px;
+			right: 32px;
+		}
+	</style>
+
+</head>
+<body>
+
+	<div class="container-fluid px-0">
+
+		<div class="row">
+			<div class="col-md-12">
+
+				<img src="{{ img }}" title="dot this fish!" alt="Picture of fish in tank" class="img-responsive w-100" id="fishimage" onclick="getCursorPos(event)"/>
+
+				<div class="top-left">
+					<h1>Welcome to</h1>
+				</div>
+				<div class="top-right">
+					<h1>THE DOT SIMULATION</h1>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+	<div class="container">
+
+		<div class="row d-flex justify-content-center">
+			<div class="col-3 py-5">
+
+				<form method="POST" action="" id="validate_form">
+					<input type="text" name="ptsval">
+					<input type="submit" name="nextimg" value="Skip to next image" id="next_form" class="btn btn-secondary">
+				</form>
+
+				{% if prev_len == 2 %}
+					<form method="POST" action="">
+						<input type="submit" name="previous" value="Oops back to previous image" id="prev_form" class="btn btn-info">
+					</form>
+				{% else %}
+					No previous image!
+				{% endif %}
+
+			</div>
+		</div>
+
+		<div class="row d-flex justify-content-center">
+			<h3><a class="nav-item nav-link" href="{{ url_for('index') }}">Get back to welcoming page</a></h3>
+		</div>
+
+	</div>
+
+
+	<script type="text/javascript">
+
+		/* Initialize point count: */
+		var point = 0;
+		/* Make list of forms: */
+/*		var ptf = ["ptf0", "ptf1", "ptf2", "ptf3", "ptf4"];*/
+		/* Initiate coordinates: */
+		var coords = [];
+
+		/* Get cursor coordinates relative to image: */
+		function getCursorPos(e) {
+			var a, x = 0, y = 0;
+			e = e || window.event;
+			/* Get the x and y positions of the image: */
+			a = document.getElementById("fishimage").getBoundingClientRect();
+			/* Calculate the cursor's x and y coordinates, relative to the image: */
+			x = e.pageX - a.left;
+			y = e.pageY - a.top;
+			/* Consider any page scrolling: */
+			x = x - window.pageXOffset;
+			y = y - window.pageYOffset;
+			/* Divide by image width and height: */
+			x = x / (a.right - a.left);
+			y = y / (a.bottom - a.top);
+			/* Add coordinates to coords list: */
+			coords.push(x)
+			coords.push(y)
+			/* If all points here, change form value and validate: */
+			if (point == 4) {
+				nival = document.getElementById("validate_form");
+				nival.ptsval.value = coords;
+				nival.submit();
+			}
+			/* Go to next form: */
+			point = point + 1
+		}
+
+	</script>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+</body>
+</html>

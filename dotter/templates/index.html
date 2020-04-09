@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+
+	<title>Dotter</title>
+	<link rel="icon" type="image/png" href="{{url_for('static', filename='otter-solid.png')}}" />
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+<body>
+
+	<div class="container">
+
+		<div class="row d-flex justify-content-center">
+			<div class="col-8 py-4">
+				<h1>Welcome to DOTTER</h1>
+			</div>
+		</div>
+
+		<div class="row d-flex justify-content-center">
+			<div class="col-8 py-3">
+				<h4>
+					The goal for you is to pin points on the fish, that is freely swimming in a rotating tank. This annoted dataset will help train a convolutional neural network to get the position of the fish inside the tank on a few particular points.
+				</h4>
+			</div>
+		</div>
+
+		<div class="row d-flex justify-content-center">
+			<div class="col-8 py-3">
+				<h5>
+					In order to get the position of the fish, an image will be displayed on the whole width of your browser. You will be asked to pin 5 different points on the fish. After selecting these 5 points one after the other, the next image will automatically be displayed, randomly from a list of all the images remaining. We have 252 videos of 6,000 frames, so that is a total of 1,512,000	images, a lot of them. The more images labelled, the best. As we will rotate images in the training set, each labelled image will count for 4 images in the set!
+				</h5>
+			</div>
+		</div>
+
+		<div class="row d-flex justify-content-center">
+			<div class="col-8 py-3">
+				<h5>
+					Here are the points that you need to pick, IN THE EXACT ORDER: 
+					<ul class="list-group">
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							the left eye
+							<span class="badge badge-primary badge-pill">1</span>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							the right eye
+							<span class="badge badge-primary badge-pill">2</span>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							the body center
+							<span class="badge badge-primary badge-pill">3</span>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							the mid-tail
+							<span class="badge badge-primary badge-pill">4</span>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							the tail end
+							<span class="badge badge-primary badge-pill">5</span>
+						</li>
+					</ul>	
+					NB: Consider that the top of the fish is always facing you
+				</h5>
+			</div>
+		</div>
+
+
+		<div class="row d-flex justify-content-center">
+			<div class="col-8 py-3">
+				<h5>
+					If you think you made a mistake on the image you just labelled, you can always get back to it by scrolling to the bottom of the page, and selecting 'Oops back to previous image'. You can only do it once, so it is impossible to label an image you did two frames before! <br>
+					Have fun!	
+				</h5>
+			</div>
+		</div>
+	
+		<div class="row d-flex justify-content-center">
+			<h3><a class="nav-item nav-link" href="{{ url_for('dotter') }}">Click HERE to launch dot simulation</a></h3>
+		</div> 
+
+		<div id="showDate" class="row d-flex justify-content-center">Hit 't' for time!</div>
+
+	</div>
+
+	<script type="text/javascript">
+		var addEvent = document.addEventListener ? function(target, type, action) {
+			if(target) {
+				target.addEventListener(type, action, false);
+			}
+		} : function(target, type, action) {
+			if(target) {
+				target.attachEvent('on' + type, action, false);
+			}
+		}
+
+		addEvent(document, 'keydown', function(e) {
+			e = e || window.event;
+			var key = e.which || e.keyCode;
+			if(key===84) {
+				document.getElementById("showDate").innerHTML = Date();
+			}
+		});
+	</script>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+</body>
+</html>
