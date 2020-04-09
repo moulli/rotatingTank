@@ -49,7 +49,7 @@ function outmask = choseMask(im, background, masks, formerdp, max_diff_disp)
         pix = pixind(pixi);
         diff_disp = sqrt((dpmaskx(pix)-formerdp(1)).^2 + (dpmasky(pix)-formerdp(2)).^2);
         if abs(diff_disp) < max_diff_disp
-            outmask = min([pix+3, max(pixind)]);
+            outmask = min([pix+1, length(pixind)]); % take mask just above just in case
             break
         end
         if pixi == length(pixind)
