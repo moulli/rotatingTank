@@ -619,6 +619,11 @@ for k = 1:keeplen
         else
             continue
         end        
+        % check interbout inverval is not equal to 0
+        IBI = (startpts(b) - endpts(b-1)) * dt; % interbout interval
+        if IBI == 0
+            continue
+        end
         % input X_fishtank
         lightstatus = (time(2)-1.5) * 2; % light status
         tankspeed = rot(time(3)); % tank rotation speed
@@ -628,7 +633,6 @@ for k = 1:keeplen
         xtrain = [ones(5, 1), (1:5)'];
         coeffs = (xtrain' * xtrain) \ xtrain' * pts_5;
         fit5speed = coeffs(2)/dt; % fit on last 5 points for speed
-        IBI = (startpts(b) - endpts(b-1)) * dt; % interbout interval
         deltaang = (abs(angle(endpts(b-1)))-abs(angle(startpts(b))))/IBI; % angle difference from last bout divided by IBI
         % total matrix X_fishtank
         X_fishtank = cat(1, X_fishtank, [lightstatus, tankspeed, lor, absangle, absformout, fit5speed, IBI, deltaang]);
