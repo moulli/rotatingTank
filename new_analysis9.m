@@ -622,9 +622,9 @@ for k = 1:keeplen
         % input X_fishtank
         lightstatus = (time(2)-1.5) * 2; % light status
         tankspeed = rot(time(3)); % tank rotation speed
-        absangle = -abs(angle(startpts(b))); % minus absolute angle before bout
-        absformout = abs(angle(endpts(b-1))); % absolute angle after former bout
-        pts_5 = -abs(angle(startpts(b)-4:startpts(b)))';
+        absangle = 180 - abs(angle(startpts(b))); % absolute angle before bout (180 is fish facing upwards)
+        absformout = 180 - abs(angle(endpts(b-1))); % absolute angle after former bout
+        pts_5 = -abs(angle((startpts(b)-4):startpts(b)))';
         xtrain = [ones(5, 1), (1:5)'];
         coeffs = (xtrain' * xtrain) \ xtrain' * pts_5;
         fit5speed = coeffs(2)/dt; % fit on last 5 points for speed
